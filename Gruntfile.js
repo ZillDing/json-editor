@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
-      src: ['test']
+      src: ['dist']
     },
     uglify: {
       options: {
@@ -12,7 +12,7 @@ module.exports = function(grunt) {
       },
       build: {
         src: 'src/<%= pkg.name %>.js',
-        dest: 'test/<%= pkg.name %>.min.js'
+        dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
     jshint: {
@@ -31,14 +31,14 @@ module.exports = function(grunt) {
           compress: true
         },
         files: {
-          'test/<%= pkg.name %>.css': 'src/<%= pkg.name %>.less'
+          'dist/<%= pkg.name %>.css': 'src/<%= pkg.name %>.less'
         }
       }
     },
     copy: {
       main: {
         src: 'src/index.html',
-        dest: 'test/index.html'
+        dest: 'dist/index.html'
       }
     },
     watch: {
