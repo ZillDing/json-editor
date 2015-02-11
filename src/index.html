@@ -1,0 +1,99 @@
+<!doctype html>
+<html ng-app="myApp">
+  <head>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="json-editor.min.js"></script>
+    <link rel="stylesheet" href="json-editor.css">
+  </head>
+  <body>
+
+    <script type="text/ng-template" id="table.html">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" href="#{{sTableName}}">
+              [object Object] - {{sTableName}}
+            </a>
+          </h4>
+        </div>
+
+        <div id="{{sTableName}}" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Value</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody ng-controller="MyNestedController">
+                <tr ng-repeat="(key, value) in obj">
+                  <th>{{key}}</th>
+                  <th>
+                    <input type="text" class="form-control"
+                          ng-if="!isObject(value)"
+                          ng-change="change(key, value)"
+                          ng-model="value"
+                          ng-model-options="{ updateOn: 'blur' }"
+                          name="field"
+                          placeholder="Enter value">
+
+                    <!-- recursive render the table -->
+                    <div ng-if="isObject(value)"
+                          ng-include="'table.html'"
+                          onload="obj = value"
+                          ng-init="sTableName = sTableName + '_' + $index">
+                    </div>
+                  </th>
+                  <th>
+                    <button class="btn btn-danger" ng-click="delete(key)">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th>
+                    <input type="text" class="form-control"
+                          ng-if="!isArray(obj)"
+                          ng-model="additionalKeyValue.key"
+                          placeholder="Enter key">
+                  </th>
+                  <th>
+                    <input type="text" class="form-control"
+                          ng-model="additionalKeyValue.value"
+                          ng-keypress="valueKeyPressed($event)"
+                          placeholder="Enter value">
+                  </th>
+                  <th>
+                    <button type="button" class="btn btn-primary" ng-click="add()">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div><!-- end of panel-body -->
+        </div><!-- end of collapse -->
+      </div><!-- end of panel -->
+
+    </script>
+
+    <div class="container">
+      <h2>Json Editor</h2>
+      <div ng-controller="MyController">
+        <div ng-include="'table.html'"></div>
+
+        <button class="btn btn-info btn-block" ng-click="show()" style="margin-top: 20px;">Show Object</button>
+      </div><!-- end of MyController -->
+    </div><!-- end of container -->
+  </body>
+</html>
